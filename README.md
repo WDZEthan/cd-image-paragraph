@@ -1,6 +1,6 @@
 ## Training for Diversity in Image Paragraph Captioning
 
-This repository includes a PyTorch implementation of [Exploring Sentence Coherence and Diversity in Image Paragraph Generation]. Our code is based on Luke Melas's implementation of [Training for Diversity in Image Paragraph Captioning] (https://www.aclweb.org/anthology/D18-1084/), available [here](https://github.com/lukemelas/image-paragraph-captioning). 
+This repository includes a PyTorch implementation of [Exploring Sentence Coherence and Diversity in Image Paragraph Generation](). Our code is based on Luke Melas's implementation of [Training for Diversity in Image Paragraph Captioning(https://www.aclweb.org/anthology/D18-1084/), available [here](https://github.com/lukemelas/image-paragraph-captioning). 
 
 ### Requirements
 * Python 2.7 (because coco-caption does not support Python 3)
