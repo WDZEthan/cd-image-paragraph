@@ -1,6 +1,6 @@
 ## Training for Diversity in Image Paragraph Captioning
 
-This repository includes a PyTorch implementation of [Training for Diversity in Image Paragraph Captioning](). Our code is based on Ruotian Luo's implementation of [Self-critical Sequence Training for Image Captioning](https://arxiv.org/abs/1612.00563), available [here.](https://github.com/ruotianluo/self-critical.pytorch). 
+This repository includes a PyTorch implementation of [Exploring Sentence Coherence and Diversity in Image Paragraph Generation]. Our code is based on Luke Melas's implementation of [Training for Diversity in Image Paragraph Captioning] (https://www.aclweb.org/anthology/D18-1084/), available [here](https://github.com/lukemelas/image-paragraph-captioning). 
 
 ### Requirements
 * Python 2.7 (because coco-caption does not support Python 3)
@@ -36,7 +36,7 @@ python scripts/prepro_ngrams.py --input_json data/captions/para_karpathy_format.
 ```
 * Extract image features using an object detector
   * We make pre-processed features widely available:
-    * Download and extract `parabu_fc` and `parabu_att` from [here](https://drive.google.com/drive/folders/1-NRSGJw8JYdEJBJuCLlqbemYiUlbi5Xn) into `data/bu_data` 
+    * Download and extract `parabu_fc` and `parabu_att` from [here](https://drive.google.com/drive/folders/1-NRSGJw8JYdEJBJuCLlqbemYiUlbi5Xn) into `data/` 
   * Or generate the features yourself:
     * Download the [Visual Genome Dataset](https://visualgenome.org/api/v0/api_home.html)
     * Apply the bottom-up attention object detector [here](https://github.com/peteanderson80/bottom-up-attention) made by Peter Anderson.
@@ -60,11 +60,11 @@ You can then copy the model:
 And train with self-critical:
 ```bash
 mkdir log_sc
-./train_xe.sh 
+./train_xe.sh
 ```
 
-### Pretrained Network
-You can download a pretrained captioning model [here](https://www.dropbox.com/s/ls9hupvzbg93c8r/topdown_sc_alpha_2.0.zip). 
+<!--### Pretrained Network
+You can download a pretrained captioning model [here](https://www.dropbox.com/s/ls9hupvzbg93c8r/topdown_sc_alpha_2.0.zip). -->
 
 ### Citation
 In case you would like to cite our paper/code (no obligation at all): 
