@@ -4,16 +4,29 @@ def parse_opt():
     parser = argparse.ArgumentParser()
 
     # Data input settings
-    parser.add_argument('--input_json', type=str, default='data/coco.json',
+    # parser.add_argument('--input_json', type=str, default='data/coco.json',
+    #                 help='path to the json file containing additional info and vocab')
+    # parser.add_argument('--input_fc_dir', type=str, default='data/cocotalk_fc',
+    #                 help='path to the directory containing the preprocessed fc feats')
+    # parser.add_argument('--input_att_dir', type=str, default='data/cocotalk_att',
+    #                 help='path to the directory containing the preprocessed att feats')
+    # parser.add_argument('--input_box_dir', type=str, default='data/cocotalk_box',
+    #                 help='path to the directory containing the boxes of att feats')
+    # parser.add_argument('--input_label_h5', type=str, default='data/coco_label.h5',
+    #                 help='path to the h5file containing the preprocessed dataset')
+
+    # My input settings
+    parser.add_argument('--input_json', type=str, default='image-paragraph-captioning/data/paratalk.json',
                     help='path to the json file containing additional info and vocab')
-    parser.add_argument('--input_fc_dir', type=str, default='data/cocotalk_fc',
+    parser.add_argument('--input_fc_dir', type=str, default='/data/liangming/parabu_fc',
                     help='path to the directory containing the preprocessed fc feats')
-    parser.add_argument('--input_att_dir', type=str, default='data/cocotalk_att',
+    parser.add_argument('--input_att_dir', type=str, default='/data/liangming/parabu_att',
                     help='path to the directory containing the preprocessed att feats')
-    parser.add_argument('--input_box_dir', type=str, default='data/cocotalk_box',
-                    help='path to the directory containing the boxes of att feats')
-    parser.add_argument('--input_label_h5', type=str, default='data/coco_label.h5',
+    parser.add_argument('--input_label_h5', type=str, default='image-paragraph-captioning/data/paratalk_label.h5',
                     help='path to the h5file containing the preprocessed dataset')
+    parser.add_argument('--input_box_dir', type=str, default='image-paragraph-captioning/data/cocotalk_box',
+                help='path to the directory containing the boxes of att feats')
+
     parser.add_argument('--start_from', type=str, default=None,
                     help="""continue training from saved model at this path. Path must contain files saved by previous training process: 
                         'infos.pkl'         : configuration;
@@ -99,9 +112,9 @@ def parse_opt():
                     help='how many images to use when periodically evaluating the validation loss? (-1 = all)')
     parser.add_argument('--save_checkpoint_every', type=int, default=2500,
                     help='how often to save a model checkpoint (in iterations)?')
-    parser.add_argument('--checkpoint_path', type=str, default='save',
+    parser.add_argument('--checkpoint_path', type=str, default='tmp_test',
                     help='directory to store checkpointed models')
-    parser.add_argument('--language_eval', type=int, default=0,
+    parser.add_argument('--language_eval', type=int, default=1,
                     help='Evaluate language as well (1 = yes, 0 = no)? BLEU/CIDEr/METEOR/ROUGE_L? requires coco-caption code from Github.')
     parser.add_argument('--losses_log_every', type=int, default=25,
                     help='How often do we snapshot losses, for inclusion in the progress dump? (0 = disable)')       
@@ -109,7 +122,7 @@ def parse_opt():
                     help='Do we load previous best score when resuming training.')       
 
     # Misc
-    parser.add_argument('--id', type=str, default='',
+    parser.add_argument('--id', type=str, default='tmp_test',
                     help='an id identifying this run/job. used in cross-val and appended when writing progress files')
     parser.add_argument('--train_only', type=int, default=0,
                     help='if true then use 80k, else use 110k')

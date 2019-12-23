@@ -1,17 +1,20 @@
 python train.py \
-    --batch_size 10 \
-    --input_att_dir 'data/parabu_att' \
-    --input_fc_dir 'data/parabu_fc' \
+    --batch_size 16 \
+    --input_att_dir '/data/liangming/parabu_att' \
+    --input_fc_dir '/data/liangming/parabu_fc' \
     --input_json 'data/paratalk.json' \
     --input_label_h5 'data/paratalk_label.h5' \
     --language_eval 1 \
     --learning_rate 5e-4 \
-    --learning_rate_decay_start 0 \
-    --scheduled_sampling_start 0 \
-    --max_epochs 2 \
+    --learning_rate_decay_start -1 \
+    --scheduled_sampling_start -1 \
+    --max_epochs 30 \
     --rnn_type 'lstm' \
+    --input_encoding_size 768 \
     --val_images_use 5000 \
-    --save_checkpoint_every 3000 \
-    --checkpoint_path 'log_xe/' \
-    --id 'xe' \
-    --print_freq 200
+    --save_checkpoint_every 1000 \
+    --checkpoint_path 'tmp_test/' \
+    --id 'tmp' \
+    --print_freq 200 \
+    --beam_size 1
+    # --self_critical_after 3

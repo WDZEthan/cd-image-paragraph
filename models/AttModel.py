@@ -27,6 +27,8 @@ from .CaptionModel import CaptionModel
 
 import pdb
 
+import ipdb
+
 def sort_pack_padded_sequence(input, lengths):
     sorted_lengths, indices = torch.sort(lengths, descending=True)
     tmp = pack_padded_sequence(input[indices], sorted_lengths, batch_first=True)
@@ -64,9 +66,12 @@ class AttModel(CaptionModel):
 
         self.ss_prob = 0.0 # Schedule sampling probability
 
-        self.embed = nn.Sequential(nn.Embedding(self.vocab_size + 1, self.input_encoding_size),
-                                nn.ReLU(),
-                                nn.Dropout(self.drop_prob_lm))
+        # This word embedding should be initialized with the BERT pretrained word embeddings
+        # self.embed = nn.Sequential(nn.Embedding(self.vocab_size + 1, self.input_encoding_size),
+        #                         nn.ReLU(),
+        #                         nn.Dropout(self.drop_prob_lm))
+        self.embed = nn.Embedding(self.vocab_size + 1, self.input_encoding_size)
+
         self.fc_embed = nn.Sequential(nn.Linear(self.fc_feat_size, self.rnn_size),
                                     nn.ReLU(),
                                     nn.Dropout(self.drop_prob_lm))
@@ -84,6 +89,10 @@ class AttModel(CaptionModel):
             self.logit = [[nn.Linear(self.rnn_size, self.rnn_size), nn.ReLU(), nn.Dropout(0.5)] for _ in range(opt.logit_layers - 1)]
             self.logit = nn.Sequential(*(reduce(lambda x,y:x+y, self.logit) + [nn.Linear(self.rnn_size, self.vocab_size + 1)]))
         self.ctx2att = nn.Linear(self.rnn_size, self.att_hid_size)
+
+    def init_BERT_embeddings(self, embedding_weights):
+        self.embed.weight.data.copy_(torch.from_numpy(embedding_weights))
+        # self.weight.requires_grad = False
 
     def init_hidden(self, bsz):
         weight = next(self.parameters())
@@ -476,6 +485,8 @@ class TopDownCore(nn.Module):
 
         output = F.dropout(h_lang, self.drop_prob_lm, self.training)
         state = (torch.stack([h_att, h_lang]), torch.stack([c_att, c_lang]))
+
+        # ipdb.set_trace()
 
         return output, state
 

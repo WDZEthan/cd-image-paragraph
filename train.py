@@ -19,6 +19,8 @@ import eval_utils
 import misc.utils as utils
 from misc.rewards import init_scorer, get_self_critical_reward
 
+import ipdb
+
 try:
     import tensorboardX as tb
 except ImportError:
@@ -29,12 +31,30 @@ def add_summary_value(writer, key, value, iteration):
     if writer:
         writer.add_scalar(key, value, iteration)
 
-def train(opt):
+def load_BERT_embeddings(BERT_path):
+    bert_embeddings = np.load(BERT_path + 'BERT_emb.npy')
+    vocab_dict = {}
+    with open(BERT_path + 'BERT_emb.index') as f:
+        for ind, line in enumerate(f.readlines()):
+            vocab_dict[line.strip()] = bert_embeddings[ind, :]
+    return vocab_dict
 
+def train(opt):
     # Load data
     loader = DataLoader(opt)
     opt.vocab_size = loader.vocab_size
     opt.seq_length = loader.seq_length
+
+    # obtain pre-trained embedding weights
+    vocab_dict = load_BERT_embeddings('data/')
+    id_to_word = loader.get_vocab()
+    word_to_id = {word: int(id) for id, word in id_to_word.items()}
+    embedding_weights = np.random.randn(opt.vocab_size + 1, opt.input_encoding_size)
+    for word, ind in word_to_id.items():
+        if word in vocab_dict:
+            embedding_weights[ind, :] = vocab_dict[word]
+        else:
+            print('Non-existing word embedding!')
 
     # Tensorboard summaries (they're great!)
     tb_summary_writer = tb and tb.SummaryWriter(opt.checkpoint_path)
@@ -65,7 +85,10 @@ def train(opt):
 
     # Create model
     model = models.setup(opt).cuda()
-    dp_model = torch.nn.DataParallel(model,device_ids=[0])
+    # inititalize with pre-trained BERT
+    model.init_BERT_embeddings(embedding_weights)
+
+    dp_model = torch.nn.DataParallel(model)
     dp_model.train()
 
     # Loss function
@@ -115,6 +138,8 @@ def train(opt):
         data = loader.get_batch('train')
         data_time = time.time() - start
         start = time.time()
+
+        # ipdb.set_trace()
 
         # Unpack data
         torch.cuda.synchronize()
@@ -230,5 +255,7 @@ def train(opt):
         if epoch >= opt.max_epochs and opt.max_epochs != -1:
             break
 
-opt = opts.parse_opt()
-train(opt)
+
+if __name__ == "__main__":
+    opt = opts.parse_opt()
+    train(opt)
